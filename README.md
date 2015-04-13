@@ -1,0 +1,3 @@
+# patterns-text-analysis
+
+README coming soon...
