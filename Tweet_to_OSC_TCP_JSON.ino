@@ -1,5 +1,5 @@
 /*
-  Tweet Analysier
+  Tweet Analyser
   
   Marcus Cook
   
