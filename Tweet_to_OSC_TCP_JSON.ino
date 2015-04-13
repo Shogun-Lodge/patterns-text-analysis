@@ -1,6 +1,10 @@
 /*
   Tweet Analyser
   
+  JSON in via TCP
+  
+  Analyser data out via OSC/UDP
+  
   Marcus Cook
   
   13/04/2015
@@ -40,7 +44,12 @@ int others = 0;
 
 char tcpIn = 'A';
 String dataBuf = "";
-char json[240] = "";
+String userOSC = "";
+String idOSC = "";
+char json[300] = "";
+
+//const char* user[] = {""};
+//const char* id[] = {""};
 
 int oscFlag = 0;
 int serialFlag = 0;
@@ -86,10 +95,9 @@ void loop(){
     tcpFlag = 1;
     oscFlag = 0;
     tcpIn = client.read();
-    dataBuf += tcpIn;
-    Serial.println("--------");
-    Serial.print("feels = ");
-    Serial.println(feels);
+    //dataBuf += tcpIn;
+    //Serial.print("feels = ");
+    //Serial.println(feels);
     json[feels] = tcpIn;
     feels++;
     //Serial.println(x);  
@@ -105,12 +113,13 @@ void loop(){
     //int textAly = Serial.read();
     //json = dataBuf;
     feels = 0;
+    Serial.println("--------");
     Serial.println("");
     Serial.println("TCP OUT!");
     Serial.println("");
     Serial.println(dataBuf);
    // Serial.println(json);
-    StaticJsonBuffer<240> jsonBuffer;
+    StaticJsonBuffer<300> jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
     
     if (!root.success()) {
@@ -120,11 +129,18 @@ void loop(){
 
     const char* text = root["text"];
     const char* user = root["user"];
-    long id = root["id"];
+    const char* id = root["id"];
 
+    Serial.print("text = ");
     Serial.println(text);
+    Serial.print("user = ");
     Serial.println(user);
+    Serial.print("id = ");
     Serial.println(id);
+    
+    dataBuf = text;
+    userOSC = user;
+    idOSC = id;
     
     int len = dataBuf.length();
     txtLngth = len;
@@ -159,7 +175,8 @@ void loop(){
    oscFlag = 1;
    textAly = 0;
    dataBuf = "";
-  Serial.println("TEXT ANALIZED");
+  Serial.println("");
+  Serial.println("TEXT ANALYSED");
   Serial.println("");
   Serial.print("Letters = ");
   Serial.println(letters);
@@ -187,6 +204,8 @@ void loop(){
       bndl.add("/para6").add(para6);
       bndl.add("/para7").add(para7);
       bndl.add("/para8").add(para8);
+      bndl.add("/user").add(userOSC);
+      bndl.add("/id").add(idOSC);
       
       Udp.beginPacket(outIp, outPort);
           bndl.send(Udp); // send the bytes to the SLIP stream
