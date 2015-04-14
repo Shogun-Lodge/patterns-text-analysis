@@ -30,8 +30,7 @@ IPAddress ip(192, 168, 10, 15);
 IPAddress outIp(192, 168, 10, 11);
 const unsigned int outPort = 9000;
 
-byte mac[] = {  
-  0x24, 0xAA, 0xBE, 0xEF, 0xFE, 0xED }; // you can find this written on the board of some Arduino Ethernets or shields
+byte mac[] = { 0x24, 0xAA, 0xBE, 0xEF, 0xFE, 0xED }; // you can find this written on the board of some Arduino Ethernets or shields
 
 int txtLngth = 0;
 int numbers = 0;
@@ -44,8 +43,12 @@ int others = 0;
 
 char tcpIn = 'A';
 String dataBuf = "";
-String userOSC = "";
-String idOSC = "";
+//String userOSC = "";
+//String idOSC = "";
+//char userOSC[20] = "";
+//char idOSC[20] = "";
+const char* user = "";
+const char* id = "";
 char json[300] = "";
 
 //const char* user[] = {""};
@@ -128,8 +131,8 @@ void loop(){
     }
 
     const char* text = root["text"];
-    const char* user = root["user"];
-    const char* id = root["id"];
+    user = root["user"];
+    id = root["id"];
 
     Serial.print("text = ");
     Serial.println(text);
@@ -139,12 +142,12 @@ void loop(){
     Serial.println(id);
     
     dataBuf = text;
-    userOSC = user;
-    idOSC = id;
+    //userOSC = root["user"];
+    //idOSC = root["id"];
     
     int len = dataBuf.length();
-    txtLngth = len;
-      for(int i = 0; i < len; i++){
+    txtLngth = len - 12;
+      for(int i = 12; i < len; i++){
       textAly = dataBuf.charAt(i);
     
         //txtLngth++;  
@@ -204,8 +207,8 @@ void loop(){
       bndl.add("/para6").add(para6);
       bndl.add("/para7").add(para7);
       bndl.add("/para8").add(para8);
-      bndl.add("/user").add(userOSC);
-      bndl.add("/id").add(idOSC);
+      bndl.add("/user").add(user);
+      bndl.add("/id").add(id);
       
       Udp.beginPacket(outIp, outPort);
           bndl.send(Udp); // send the bytes to the SLIP stream
@@ -230,7 +233,7 @@ void loop(){
    }    
 }
 
-// MAC address from 24AA025E48 MAC Chip via I2C
+ // MAC address from 24AA025E48 MAC Chip via I2C
 byte readRegister(byte r){
   unsigned char v;
   Wire.beginTransmission(I2C_ADDRESS);
