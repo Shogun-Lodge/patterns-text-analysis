@@ -49,6 +49,16 @@ int upper = 0;
 int punct = 0;
 int others = 0;
 int ascii = 0;
+int indiv1 = 0;
+int indiv2 = 0;
+int indiv3 = 0;
+int indiv4 = 0;
+int indiv5 = 0;
+int indiv6 = 0;
+int indiv7 = 0;
+int indiv8 = 0;
+int indiv9 = 0;
+int indiv10 = 0;
 
 //variables needed for text analysis 
 char tcpIn = 'A';
@@ -57,6 +67,7 @@ const char* user = "";
 const char* id = "";
 char json[300] = "";
 int textAly = 0;
+int charAly = 0;
 int feels = 0;
 
 //flags need for tcp and OSC operation
@@ -109,7 +120,7 @@ void loop(){
     feels++;
   } 
   
-    while (client != true && tcpFlag == 1){
+  while (client != true && tcpFlag == 1){
     feels = 0;
     Serial.println("--------");
     Serial.println("");
@@ -139,112 +150,187 @@ void loop(){
     int len = dataBuf.length();
     txtLngth = len - 12;               // Text length minus '@twitterbot '
     
-      //Cycyle though text String buffer analysing each char minus '@twitterbot '
-      for(int i = 12; i < len; i++){
+    //Cycyle though text String buffer analysing each char minus '@twitterbot '
+    for(int i = 12; i < len; i++){
       textAly = dataBuf.charAt(i);
       ascii = ascii + textAly;        // Total ASCII value of text
-        if(isDigit(textAly)) {        // # of numbers in text
+      if(isDigit(textAly)) {        // # of numbers in text
         numbers++;                    
-        }
-        if(isAlpha(textAly)) {        // # of letters in text
-          letters++;                 
-        }
-        if(isSpace(textAly)) {        // # of spaces in text
-          spaces++;                  
-        }
-        if(isLowerCase(textAly)) {    // # of lower case letters in text
-          lower++;
-        }
-        if(isUpperCase(textAly)) {    // # of upper case letters in text
-          upper++;
-        }
-        if(isPunct(textAly)) {        // # of 'puncuation' in text
-          punct++;
-        }
-        else{                        // # of 'others' in text
-          others++;
-        }
       }
-
+      if(isAlpha(textAly)) {        // # of letters in text
+        letters++;                 
+      }
+      if(isSpace(textAly)) {        // # of spaces in text
+        spaces++;                  
+      }
+      if(isLowerCase(textAly)) {    // # of lower case letters in text
+        lower++;
+      }
+      if(isUpperCase(textAly)) {    // # of upper case letters in text
+        upper++;
+      }
+      if(isPunct(textAly)) {        // # of 'puncuation' in text
+        punct++;
+      }
+      else{                        // # of 'others' in text
+        others++;
+      }
+    }
+    
+    dataBuf = text;
+    for(int i = 12; i < len; i++){
+      charAly = dataBuf.charAt(i);
+      if(charAly == 'H'){          
+        indiv1++;
+      }
+      if(charAly == 'h'){          
+        indiv2++;
+      }
+      if(charAly == '|'){          
+        indiv3++;
+      }
+      if(charAly == 'z'){          
+        indiv4++;
+      }
+      if(charAly == '9'){          
+        indiv5++;
+      }
+      if(charAly == '{'){          
+        indiv6++;
+      }
+      if(charAly == '?'){          
+        indiv7++;
+      }
+      if(charAly == '%'){          
+        indiv8++;
+      }
+      if(charAly == '~'){          
+        indiv9++;
+      }
+      if(charAly == '/'){          
+        indiv10++;
+      }
+    }
+    
    tcpFlag = 0;                      // Clear TCP flag
    oscFlag = 1;                      // Set OSC flag
    textAly = 0;                      // Claera text analyse varaiable
    dataBuf = "";                     // Clear text String buffer
-  
-  Serial.println("");
-  Serial.println("TEXT ANALYSED");
-  Serial.println("");
-  Serial.print("Text Length = ");
-  Serial.println(txtLngth);
-  Serial.print("Letters = ");
-  Serial.println(letters);
-  Serial.print("ASCII = ");
-  Serial.println(ascii);
-  Serial.print("Upper = ");
-  Serial.println(upper);
-  Serial.print("Lower = ");
-  Serial.println(lower);
-  Serial.print("Spaces = ");
-  Serial.println(spaces);
-  Serial.print("Numbers = ");
-  Serial.println(numbers);
-  Serial.print("Punctuation = ");
-  Serial.println(punct);
-  Serial.print("'Others' = ");
-  Serial.println(others);
-  Serial.println("");
+    
+    Serial.println("");
+    Serial.println("TEXT ANALYSED");
+    Serial.println("");
+    Serial.print("Text Length = ");
+    Serial.println(txtLngth);
+    Serial.print("Letters = ");
+    Serial.println(letters);
+    Serial.print("ASCII = ");
+    Serial.println(ascii);
+    Serial.print("Upper = ");
+    Serial.println(upper);
+    Serial.print("Lower = ");
+    Serial.println(lower);
+    Serial.print("Spaces = ");
+    Serial.println(spaces);
+    Serial.print("Numbers = ");
+    Serial.println(numbers);
+    Serial.print("Punctuation = ");
+    Serial.println(punct);
+    Serial.print("'Others' = ");
+    Serial.println(others);
+    Serial.print("Indiv1 = ");
+    Serial.println(indiv1);
+    Serial.print("Indiv2 = ");
+    Serial.println(indiv2);
+    Serial.print("Indiv3 = ");
+    Serial.println(indiv3);
+    Serial.print("Indiv4 = ");
+    Serial.println(indiv4);
+    Serial.print("Indiv5 = ");
+    Serial.println(indiv5);
+    Serial.print("Indiv6 = ");
+    Serial.println(indiv6);
+    Serial.print("Indiv7 = ");
+    Serial.println(indiv7);
+    Serial.print("Indiv8 = ");
+    Serial.println(indiv8);
+    Serial.print("Indiv9 = ");
+    Serial.println(indiv9);
+    Serial.print("Indiv10 = ");
+    Serial.println(indiv10);
+    Serial.println("");
   }
  
-   if(oscFlag == 1){               // Are we ready for OSC!
+  if(oscFlag == 1){               // Are we ready for OSC!
      
-     para1 = txtLngth;
-     para2 = numbers;
-     para3 = letters;
-     para4 = spaces;
-     para5 = lower;
-     para6 = upper;
-     para7 = punct;
-     para8 = others;
+    para1 = txtLngth;
+    para2 = numbers;
+    para3 = letters;
+    para4 = spaces;
+    para5 = lower;
+    para6 = upper;
+    para7 = punct;
+    para8 = others;
    
-     OSCBundle bndl;
+    OSCBundle bndl;
    
-      //Build OSC bundle
-      bndl.add("/para1").add(para1);
-      bndl.add("/para2").add(para2);
-      bndl.add("/para3").add(para3);
-      bndl.add("/para4").add(para4);
-      bndl.add("/para5").add(para5);
-      bndl.add("/para6").add(para6);
-      bndl.add("/para7").add(para7);
-      bndl.add("/para8").add(para8);
-      bndl.add("/para9").add(ascii);
-      bndl.add("/user").add(user);
-      bndl.add("/id").add(id);
+    //Build OSC bundle
+    bndl.add("/para1").add(para1);
+    bndl.add("/para2").add(para2);
+    bndl.add("/para3").add(para3);
+    bndl.add("/para4").add(para4);
+    bndl.add("/para5").add(para5);
+    bndl.add("/para6").add(para6);
+    bndl.add("/para7").add(para7);
+    bndl.add("/para8").add(para8);
+    bndl.add("/para9").add(ascii);
+    bndl.add("/para10").add(indiv1);
+    bndl.add("/para11").add(indiv2);
+    bndl.add("/para12").add(indiv3); 
+    bndl.add("/para13").add(indiv4); 
+    bndl.add("/para14").add(indiv5); 
+    bndl.add("/para15").add(indiv6); 
+    bndl.add("/para16").add(indiv7); 
+    bndl.add("/para17").add(indiv8); 
+    bndl.add("/para18").add(indiv9);
+    bndl.add("/para19").add(indiv10);     
+    bndl.add("/user").add(user);
+    bndl.add("/id").add(id);
       
-      //Send OSC bundle out to the world
-      Udp.beginPacket(outIp, outPort);    // IP of destiantion and port
-          bndl.send(Udp);                 // send the bytes to the SLIP stream
-      Udp.endPacket();                    // mark the end of the OSC Packet
-      bndl.empty();                       // empty the bundle to free room for a new one
+    //Send OSC bundle out to the world
+    Udp.beginPacket(outIp, outPort);    // IP of destiantion and port
+        bndl.send(Udp);                 // send the bytes to the SLIP stream
+    Udp.endPacket();                    // mark the end of the OSC Packet
+    bndl.empty();                       // empty the bundle to free room for a new one
       
-      //Clear all text avariables
-      txtLngth = 0;
-      numbers = 0;
-      letters = 0;
-      spaces = 0;
-      lower = 0;
-      upper = 0;
-      punct = 0;
-      others = 0;
-      ascii = 0;
+    //Clear all text avariables
+    txtLngth = 0;
+    numbers = 0;
+    letters = 0;
+    spaces = 0;
+    lower = 0;
+    upper = 0;
+    punct = 0;
+    others = 0;
+    ascii = 0;
+    indiv1 = 0;
+    indiv2 = 0;
+    indiv3 = 0;
+    indiv4 = 0;
+    indiv5 = 0;
+    indiv6 = 0;
+    indiv7 = 0;
+    indiv8 = 0;
+    indiv9 = 0;
+    indiv10 = 0;
      
-      oscFlag = 0;                      // Clear OSC flag
+    oscFlag = 0;                      // Clear OSC flag
       
-      Serial.println("OSC SENT FLAGS SET");
-      Serial.println("");
-      Serial.println("--------");
-      Serial.println("");
-   }    
+    Serial.println("OSC SENT FLAGS SET");
+    Serial.println("");
+    Serial.println("--------");
+    Serial.println("");
+  }    
 }
 /*
  // MAC address from 24AA025E48 MAC Chip via I2C
