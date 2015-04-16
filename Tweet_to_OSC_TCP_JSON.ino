@@ -50,17 +50,6 @@ int punct = 0;
 int others = 0;
 int ascii = 0;
 
-int indiv1 = 0;
-int indiv2 = 0;
-int indiv3 = 0;
-int indiv4 = 0;
-int indiv5 = 0;
-int indiv6 = 0;
-int indiv7 = 0;
-int indiv8 = 0;
-int indiv9 = 0;
-int indiv10 = 0;
-
 //variables needed for text analysis 
 char tcpIn = 'A';
 String dataBuf = "";
@@ -120,96 +109,62 @@ void loop(){
     feels++;
   } 
   
-  while (client != true && tcpFlag == 1){
-      feels = 0;
-      Serial.println("--------");
-      Serial.println("");
-      Serial.println("TCP OUT!");
-      Serial.println(dataBuf);
-      StaticJsonBuffer<300> jsonBuffer;
-      JsonObject& root = jsonBuffer.parseObject(json);
-   
-      if (!root.success()){
-        Serial.println("parseObject() failed");
-        return;
-      }
-
-      const char* text = root["text"];
-      user = root["user"];
-      id = root["id"];
-
-      Serial.print("text = ");
-      Serial.println(text);
-      Serial.print("user = ");
-      Serial.println(user);
-      Serial.print("id = ");
-      Serial.println(id);
+    while (client != true && tcpFlag == 1){
+    feels = 0;
+    Serial.println("--------");
+    Serial.println("");
+    Serial.println("TCP OUT!");
+    Serial.println(dataBuf);
+    StaticJsonBuffer<300> jsonBuffer;
+    JsonObject& root = jsonBuffer.parseObject(json);
     
-      dataBuf = text;                    // Move text into String buffer
+    if (!root.success()) {
+      Serial.println("parseObject() failed");
+      return;
+    }
+
+    const char* text = root["text"];
+    user = root["user"];
+    id = root["id"];
+
+    Serial.print("text = ");
+    Serial.println(text);
+    Serial.print("user = ");
+    Serial.println(user);
+    Serial.print("id = ");
+    Serial.println(id);
     
-      int len = dataBuf.length();
-      txtLngth = len - 12;               // Text length minus '@twitterbot '
+    dataBuf = text;                    // Move text into String buffer
+    
+    int len = dataBuf.length();
+    txtLngth = len - 12;               // Text length minus '@twitterbot '
     
       //Cycyle though text String buffer analysing each char minus '@twitterbot '
-        for(int i = 12; i < len; i++){
-          textAly = dataBuf.charAt(i);
-          ascii = ascii + textAly;        // Total ASCII value of text
-            if(isDigit(textAly)) {        // # of numbers in text
-              numbers++;                    
-            }
-            if(isAlpha(textAly)) {        // # of letters in text
-              letters++;                 
-            }
-            if(isSpace(textAly)) {        // # of spaces in text
-              spaces++;                  
-            }
-            if(isLowerCase(textAly)) {    // # of lower case letters in text
-              lower++;
-            }
-            if(isUpperCase(textAly)) {    // # of upper case letters in text
-              upper++;
-            }
-            if(isPunct(textAly)) {        // # of 'puncuation' in text
-              punct++;
-            }
-            else{                        // # of 'others' in text
-              others++;
-            }
-      
-     /* for(int x = 12; x < len; x++){
-         textAly = dataBuf.charAt(x);
-         if(textAly = 'h'){
-           indiv1++;
-         }
-         if(textAly = 'H'){
-           indiv2++;
-         }
-         if(textAly = '?'){
-           indiv3++;
-         }
-         if(textAly = '|'){
-           indiv4++;
-         }
-         if(textAly = '+'){
-           indiv5++;
-         }
-         if(textAly = '9'){
-           indiv6++;
-         }
-         if(textAly = '3'){
-           indiv7 = indiv7++;
-         }
-         if(textAly = 'Z'){
-           indiv8++;
-         }
-         if(textAly = '~'){
-           indiv9++;
-         }
-         if(textAly = ']'){
-           indiv10++;
-         }
-     */ 
-    //}
+      for(int i = 12; i < len; i++){
+      textAly = dataBuf.charAt(i);
+      ascii = ascii + textAly;        // Total ASCII value of text
+        if(isDigit(textAly)) {        // # of numbers in text
+        numbers++;                    
+        }
+        if(isAlpha(textAly)) {        // # of letters in text
+          letters++;                 
+        }
+        if(isSpace(textAly)) {        // # of spaces in text
+          spaces++;                  
+        }
+        if(isLowerCase(textAly)) {    // # of lower case letters in text
+          lower++;
+        }
+        if(isUpperCase(textAly)) {    // # of upper case letters in text
+          upper++;
+        }
+        if(isPunct(textAly)) {        // # of 'puncuation' in text
+          punct++;
+        }
+        else{                        // # of 'others' in text
+          others++;
+        }
+      }
 
    tcpFlag = 0;                      // Clear TCP flag
    oscFlag = 1;                      // Set OSC flag
@@ -263,16 +218,6 @@ void loop(){
       bndl.add("/para7").add(para7);
       bndl.add("/para8").add(para8);
       bndl.add("/para9").add(ascii);
-      bndl.add("/para10").add(indiv1);
-      bndl.add("/para11").add(indiv2);
-      bndl.add("/para12").add(indiv3);
-      bndl.add("/para13").add(indiv4);
-      bndl.add("/para14").add(indiv5);
-      bndl.add("/para15").add(indiv6);
-      bndl.add("/para16").add(indiv7);
-      bndl.add("/para17").add(indiv8);
-      bndl.add("/para18").add(indiv9);
-      bndl.add("/para19").add(indiv10);
       bndl.add("/user").add(user);
       bndl.add("/id").add(id);
       
@@ -291,16 +236,7 @@ void loop(){
       upper = 0;
       punct = 0;
       others = 0;
-      indiv1 = 0;
-      indiv2 = 0;
-      indiv3 = 0;
-      indiv4 = 0;
-      indiv5 = 0;
-      indiv6 = 0;
-      indiv7 = 0;
-      indiv8 = 0;
-      indiv9 = 0;
-      indiv10 = 0;
+      ascii = 0;
      
       oscFlag = 0;                      // Clear OSC flag
       
@@ -308,8 +244,7 @@ void loop(){
       Serial.println("");
       Serial.println("--------");
       Serial.println("");
-     }    
-  }
+   }    
 }
 /*
  // MAC address from 24AA025E48 MAC Chip via I2C
