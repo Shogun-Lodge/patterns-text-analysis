@@ -9,9 +9,13 @@
   
   Shogun Lodge Services
   
-  15/04/2015
+  21/04/2015
+  
+  Sends shortened 'id' number
   
   !!! Work in progress - Much serial printing / debugging !!!
+  
+  Yes, needs tidy
 
   EtherMega hence 24AA025E48 MAC Chip code (I2C stuff) - Currently removed
   
@@ -65,6 +69,7 @@ char tcpIn = 'A';
 String dataBuf = "";
 const char* user = "";
 const char* id = "";
+char idShort[20] = " ";
 char json[300] = "";
 int textAly = 0;
 int charAly = 0;
@@ -144,6 +149,13 @@ void loop(){
     Serial.println(user);
     Serial.print("id = ");
     Serial.println(id);
+    
+    for(int i = 0; i < 12; i++){
+     idShort[i] = id[(24+i)];
+    }
+   
+   Serial.print("id Short = ");
+   Serial.println(idShort); 
     
     dataBuf = text;                    // Move text into String buffer
     
@@ -295,7 +307,7 @@ void loop(){
     bndl.add("/para18").add(indiv9);
     bndl.add("/para19").add(indiv10);     
     bndl.add("/user").add(user);
-    bndl.add("/id").add(id);
+    bndl.add("/id").add(idShort);
       
     //Send OSC bundle out to the world
     Udp.beginPacket(outIp, outPort);    // IP of destiantion and port
