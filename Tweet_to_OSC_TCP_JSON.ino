@@ -35,11 +35,13 @@
 EthernetUDP Udp;
 
 //the Arduino's IP
-IPAddress ip(192, 168, 10, 15);
+IPAddress ip(192, 168, 0, 15);
 //destination IP
-IPAddress outIp(192, 168, 10, 11);
+IPAddress outIp(192, 168, 0, 6);
 //port to send OSC out on
 const unsigned int outPort = 9000;
+
+byte gateway[] = { 192, 168, 0, 1 };
 
 byte mac[] = { 0x24, 0xAA, 0xBE, 0xEF, 0xFE, 0xED }; // you can find this written on the board of some Arduino Ethernets or shields
 
@@ -104,7 +106,7 @@ void setup(){
   //mac[4] = readRegister(0xFE);
   //mac[5] = readRegister(0xFF);
   
-  Ethernet.begin(mac,ip);                  //Set MAC and local IP
+  Ethernet.begin(mac,ip,gateway);                  //Set MAC and local IP
   Udp.begin(8888);                         //Start UPD listening on port 8888
   
   Serial.begin(57600);
@@ -160,10 +162,10 @@ void loop(){
     dataBuf = text;                    // Move text into String buffer
     
     int len = dataBuf.length();
-    txtLngth = len - 12;               // Text length minus '@twitterbot '
+    txtLngth = len - 13;               // Text length minus '@videovector '
     
-    //Cycyle though text String buffer analysing each char minus '@twitterbot '
-    for(int i = 12; i < len; i++){
+    //Cycyle though text String buffer analysing each char minus '@videovector '
+    for(int i = 13; i < len; i++){
       textAly = dataBuf.charAt(i);
       ascii = ascii + textAly;        // Total ASCII value of text
       if(isDigit(textAly)) {        // # of numbers in text
